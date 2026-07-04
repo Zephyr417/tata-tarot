@@ -14,7 +14,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Tata's Tarot",
+
   description: "A birthday surprise for my Tata ❤️",
+
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Tata's Tarot",
+  },
 };
 
 export default function RootLayout({
