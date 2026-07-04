@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Tata's Tarot",
-    short_name: "Tarot",
+    short_name: "Tata's Tarot",
     description: "A birthday surprise for my Tata ❤️",
 
     start_url: "/",
