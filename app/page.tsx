@@ -191,7 +191,7 @@ export default function Home() {
         </h1>
 
         <p className="mt-4 text-lg leading-relaxed">
-          What&apos;s the otter&apos;s little surprise for now?
+          What&apos;s on the otter's mind now?
         </p>
       </div>
 
@@ -307,7 +307,7 @@ export default function Home() {
           ${revealed ? "opacity-0 pointer-events-none" : "opacity-100"}
         `}
       >
-        Swipe to choose. Tap the center card to reveal.
+        Think of the question. Choose your magic card.
       </p>
 
       {/* RESULT */}

@@ -52,7 +52,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "Your inner voice may be buried under noise, worry, or other people's expectations. Reduce the noise, rest your mind, and let the answer come back naturally.",
-      wifeMessage: "Meld away. You do not need to force clarity today. 别让外界的声音淹没了自己的判断,耐心等待,迷雾终会散去。",
+      wifeMessage: "Meld away. You do not need to force clarity today. 别让外界的声音淹没了自己的判断, 耐心等待, 迷雾终会散去。",
     },
   },
   {
@@ -66,7 +66,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "You may be giving without receiving. Come back to your body and your comfort. Eat properly, rest when you can, and do not make love prove itself through exhaustion.",
-      wifeMessage: "You deserve care too. 发出去了AK皇后,也要给自己留下一把M4A1-S。别让自己太累了,遗迹道具大师。",
+      wifeMessage: "You deserve care too. 发出去了AK皇后, 也要给自己留下一把M4A1-S。别让自己太累了, 遗迹道具大师。",
     },
   },
   {
@@ -76,11 +76,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-emperor.png",
     upright: {
       message: "A little structure can protect your peace. Make one clear plan, boundary, or practical decision. You do not have to control the whole day; just create enough steadiness to feel safe.",
-      wifeMessage: "真正优秀的指挥,不是每一枪都自己开,而是让整个队伍都知道下一步该往哪里走。Rush B,懂？",
+      wifeMessage: "真正优秀的指挥, 不是每一枪都自己开, 而是让整个队伍都知道下一步该往哪里走。Rush B, 懂？",
     },
     reversed: {
       message: "Too much control may feel heavy. Notice where the rules have become bigger than the problem. Loosen one grip, let something be imperfect, and keep only what truly needs holding.",
-      wifeMessage: "You are safe even when everything is not perfectly arranged. 如果所有眼都要你来插,再强的酱油也会累。今天就试着放松,试着相信你的carry。",
+      wifeMessage: "You are safe even when everything is not perfectly arranged. 如果所有眼都要你来插, 再强的酱油也会累。今天就试着放松, 试着相信你的carry。",
     },
   },
   {
@@ -104,7 +104,7 @@ export const cards: TarotCard[] = [
     image: "/cards/the-lovers.png",
     upright: {
       message: "Choose from love rather than fear or pressure. This may be about a relationship, or about the life that feels honest. Ask whether this choice brings you closer to yourself.",
-      wifeMessage: "真正的队友不是 KDA 最高的人,而是一起坚持走到最后的人。No matter how today feels, you are deeply loved. Especially by me.",
+      wifeMessage: "真正的队友不是 KDA 最高的人, 而是一起坚持走到最后的人。No matter how today feels, you are deeply loved. Especially by me.",
     },
     reversed: {
       message: "Something may feel misaligned between what you want, say, do, or accept. Do not rush to make it look harmonious. A gentle truth is better than a pretty silence that makes you disappear.",
@@ -118,11 +118,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-chariot.png",
     upright: {
       message: "Progress may come from choosing your lane and staying with it. You do not need to sprint. If emotions or tasks pull in different directions, name the destination first, then take one practical step.",
-      wifeMessage: "...那我们先从量子力学出发,粒子在被观察之前可以同时处于多种状态。但反馈增益调得太高,再稳定的系统也会开始振荡....总之闭眼冲就行啦! IceBear和Panpan带你前进。",
+      wifeMessage: "...那我们先从量子力学出发, 粒子在被观察之前可以同时处于多种状态。但反馈增益调得太高, 再稳定的系统也会开始振荡....总之闭眼冲就行啦! IceBear和Panpan带你前进。",
     },
     reversed: {
       message: "The day may feel pulled apart by competing needs or moods. Instead of forcing momentum, slow down and regain direction. It is okay to pause, adjust, and restart.",
-      wifeMessage: "...而根据热力学第二定律,房间总会越来越乱。所以今天如果整理了桌子,真的很了不起了,因为我们刚刚短暂战胜了宇宙。",
+      wifeMessage: "...而根据热力学第二定律, 房间总会越来越乱。所以今天如果整理了桌子, 真的很了不起了, 因为我们刚刚短暂战胜了宇宙。",
     },
   },
   {
@@ -132,11 +132,11 @@ export const cards: TarotCard[] = [
     image: "/cards/strength.png",
     upright: {
       message: "Gentle courage is still courage. Meet yourself and others with patience rather than force. If something feels difficult, breathe, soften your jaw, and respond from kindness instead of pressure.",
-      wifeMessage: "今天要保持耐心哦! 3..,2..,1..,今天已经坚持3秒了,击败了99%的人，你很棒了！小九给你力量!",
+      wifeMessage: "今天要保持耐心哦! 3..,2..,1..,今天已经坚持3秒了, 击败了99%的人，你很棒了！小九给你力量!",
     },
     reversed: {
       message: "Your courage may be tired. Do not judge yourself for not feeling brave enough. Care for the part of you that has been trying hard. Rest can be strength too.",
-      wifeMessage: "接受自己的不完美,也是一种勇敢。失败是成功的老师,而我失败你的老师",
+      wifeMessage: "接受自己的不完美, 也是一种勇敢。失败是成功的老师, 而我失败你的老师",
     },
   },
   {
@@ -146,11 +146,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-hermit.png",
     upright: {
       message: "Step back from noise if you can. You may need a small pocket of solitude to understand what you really feel. Return to yourself long enough to hear your own truth.",
-      wifeMessage: "今天适合学习、阅读、思考或整理计划。J人来了,大家闪开！记得计划一下明天的写周末计划的计划吧！",
+      wifeMessage: "今天适合学习、阅读、思考或整理计划。J人来了, 大家闪开！记得计划一下明天的写周末计划的计划吧！",
     },
     reversed: {
       message: "Do not become too alone inside your thoughts. Reflection is helpful; isolation that makes everything darker is not. Let a kind voice reach you, even in a small way.",
-      wifeMessage: "If you feel alone today, 回家跟我一起玩游戏吧！我第二座城直接赠送给你,再做个鸡蛋羹给你吃。",
+      wifeMessage: "If you feel alone today, 回家跟我一起玩游戏吧！我第二座城直接赠送给你, 再做个鸡蛋羹给你吃。",
     },
   },
   {
@@ -160,11 +160,11 @@ export const cards: TarotCard[] = [
     image: "/cards/wheel-of-fortune.png",
     upright: {
       message: "Movement is happening, even if you cannot control every turn. Stay flexible and notice the opening when it appears. Meet change with curiosity instead of gripping the wheel too tightly.",
-      wifeMessage: "大摆钟来喽！机不可失,失不再来,来日方丈,方丈不同意.....你是不是看成来日方长了?",
+      wifeMessage: "大摆钟来喽！机不可失, 失不再来, 来日方丈, 方丈不同意.....你是不是看成来日方长了?",
     },
     reversed: {
       message: "Delays or repetition may feel frustrating, but a slow turn is still a turn. Do not decide that a stuck moment means a stuck life. Adjust one response, expectation, or tiny habit.",
-      wifeMessage: "赌徒谬误说过连续发生某件事,并不会改变下一次发生的概率。但我们仍然要regain lost courage,再给踏马比的一首歌的时间。",
+      wifeMessage: "赌徒谬误说过连续发生某件事, 并不会改变下一次发生的概率。但我们仍然要regain lost courage, 再给踏马比的一首歌的时间。",
     },
   },
   {
@@ -174,11 +174,11 @@ export const cards: TarotCard[] = [
     image: "/cards/justice.png",
     upright: {
       message: "Separate facts from fear and responsibility from blame. What is fair to others should also be fair to you. If there is a decision to make, choose the one you can stand behind calmly.",
-      wifeMessage: "分院帽会倾听你的想法,但最终决定你是谁的,不是帽子,而是你的选择。Griffindor!",
+      wifeMessage: "分院帽会倾听你的想法, 但最终决定你是谁的, 不是帽子, 而是你的选择。Griffindor!",
     },
     reversed: {
       message: "Be careful not to punish yourself for things bigger than you. Seek balance without becoming harsh. Ask what is yours to carry, and what can be set down with dignity.",
-      wifeMessage: "发现自己的错误并改正,也是一种勇敢。但是尖沙咀还是你说了算。",
+      wifeMessage: "发现自己的错误并改正, 也是一种勇敢。但是尖沙咀还是你说了算。",
     },
   },
   {
@@ -192,7 +192,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "Waiting may feel frustrating or meaningless. Notice where resisting reality is draining you. You may not move the whole situation, but you can release one tension and choose one next step.",
-      wifeMessage: "新的风暴已经出现,胡思乱想烧脑袋,今天要放下对完美结果的执着,大胆开雾出击！",
+      wifeMessage: "新的风暴已经出现, 胡思乱想烧脑袋, 今天要放下对完美结果的执着, 大胆开雾出击, 打他的老师！",
     },
   },
   {
@@ -206,7 +206,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "Change may be knocking while part of you still holds the door closed. Do not force a dramatic transformation. Start by releasing one expectation or one old sentence about yourself.",
-      wifeMessage: "复活之后还在看死亡回放的人,永远赶不上下一波兵线。暂停复盘可以,别忘了重新买活. Now the game is on!",
+      wifeMessage: "复活之后还在看死亡回放的人, 永远赶不上下一波兵线。暂停复盘可以, 别忘了重新买活. Now the game is on!",
     },
   },
   {
@@ -216,11 +216,11 @@ export const cards: TarotCard[] = [
     image: "/cards/temperance.png",
     upright: {
       message: "The answer may be moderation rather than extremes. Mix effort with rest, honesty with gentleness, and planning with flexibility. A steady rhythm will help you feel like yourself again.",
-      wifeMessage: "复仇者联盟真正战胜灭霸,不是因为每个人都最强,而是因为每个人都在最合适的时间,做了最合适的事情。爱你三千次。",
+      wifeMessage: "复仇者联盟真正战胜灭霸, 不是因为每个人都最强, 而是因为每个人都在最合适的时间, 做了最合适的事情。爱你三千次。",
     },
     reversed: {
       message: "Your balance may be stretched. You may be doing too much or forgetting basic needs. Come back to simple medicine: water, breath, food, rest, and slower choices.",
-      wifeMessage: "不是每个人都能像美国队长一样电梯1v9。那也没事,要记得好好吃饭,好好睡觉哦。",
+      wifeMessage: "不是每个人都能像美国队长一样电梯1v9。那也没事, 要记得好好吃饭, 好好睡觉哦。",
     },
   },
   {
@@ -230,7 +230,7 @@ export const cards: TarotCard[] = [
     image: "/cards/the-devil.png",
     upright: {
       message: "Notice what has become too heavy, too tempting, or too familiar to question. Look at what drains your freedom: a thought loop, a habit, a fear, or an attachment. Naming it starts to loosen it.",
-      wifeMessage: "Nothing about a hard day makes you less wonderful. Come back to yourself slowly. 今天不能做犯了贪婪之罪的5号位点金手敌法师。看看这77和99可不可爱。",
+      wifeMessage: "Nothing about a hard day makes you less wonderful. Come back to yourself slowly. 今天不能做犯了贪婪之罪的5号位点金手敌法师。看看这77和99可不可爱。"
     },
     reversed: {
       message: "Something that once held you tightly may be losing its power. Support that freedom with one clear choice. Do not shame the old pattern; choose the next kinder thing.",
@@ -258,11 +258,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-star.png",
     upright: {
       message: "Hope is returning quietly. You do not need perfect inspiration to move toward something better. Notice one beautiful thing, trust one gentle possibility, and let your softness have a future.",
-      wifeMessage: "你就是星星。星星不会驱散黑暗,但它会让黑暗不那么可怕。You are my star.",
+      wifeMessage: "星星卡, 卡星星，星星是你，你是星星。星星不会驱散黑暗, 但它会让黑暗不那么可怕。而且你是我的星星。",
     },
     reversed: {
       message: "Hope may feel far away, but it has not left. Care for the part of you that cannot shine on command. Let hope return as a tiny spark, not a performance.",
-      wifeMessage: "你就是星星。今天,也许你还没有看到星光,但请别忘了抬头。我想一直在你身边,陪你一起看星星。",
+      wifeMessage: "你就是星星。今天, 也许你还没有看到星光, 但请别忘了抬头。The sky is always full of stars. 我想一直在你身边, 陪你一起看星星。",
     },
   },
   {
@@ -272,11 +272,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-moon.png",
     upright: {
       message: "Things may not be fully clear today, and that is okay. Avoid making fear into fact. Move slowly, check what is real, and listen to the quiet signals inside you.",
-      wifeMessage: "月亮是宇宙中最温柔的光。你也一样。",
+      wifeMessage: "月亮是宇宙中最温柔的光。今夜月亮尖尖, 风也温柔, 你也温柔。",
     },
     reversed: {
       message: "Confusion may be starting to clear. A worry or hidden feeling could become easier to name. Let truth arrive gently, and follow the small thread that feels calmer than before.",
-      wifeMessage: "月光光,照大王。记住，当烟雾弹被手雷炸开,再不往前走会吃第二颗雷。",
+      wifeMessage: "月光光, 照大王。AUV, 当烟雾弹被手雷炸开, 再不往前走会吃第二颗雷。",
     },
   },
   {
@@ -290,7 +290,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "The light may be covered, but it is not gone. Do not chase a perfect mood. Look for a smaller sun: a warm drink, a funny message, a soft blanket, one good breath.",
-      wifeMessage: "守得云开见月明,但这是太阳卡,你懂我意思吧。不管怎么样,今天也要好好吃饭哦。",
+      wifeMessage: "守得云开见月明, 但这好像是太阳卡, 算了你懂我意思吧。不管怎么样, 今天也要好好吃饭哦。",
     },
   },
   {
@@ -304,7 +304,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "You may be holding yourself to an impossible standard. Do not confuse growth with punishment. You can learn without attacking yourself. Speak inwardly with tenderness.",
-      wifeMessage: "每个人都会经历自己的Endgame,但真正重要的,不是那场最后的战斗,而是在战斗结束之后,你决定成为一个怎样的人。以前我没得选,现在我想要做个好人。",
+      wifeMessage: "每个人都会经历自己的Endgame, 但真正重要的, 不是那场最后的战斗, 而是在战斗结束之后, 你决定成为一个怎样的人。以前我没得选, 现在我想要做个好人。",
     },
   },
   {
@@ -314,11 +314,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-world.png",
     upright: {
       message: "Pause long enough to notice what you have survived, learned, or finished. You may not feel perfect, but something in you is more complete than before. Let yourself receive that.",
-      wifeMessage: "就像霍格沃茨特快列车每年都会回到九又四分之三站台,今天新的故事也将开始。I am so proud of you. It's ok to celebrate. And see you next adventure.",
+      wifeMessage: "就像霍格沃茨特快列车每年都会回到九又四分之三站台, 今天新的故事也将开始。I am so proud of you. It's ok to celebrate. And see you next adventure.",
     },
     reversed: {
       message: "Something may feel unfinished or not fully settled. Choose one small loop to close instead of resolving everything. Completion can be simple: send the message, name the feeling, or rest.",
-      wifeMessage: "总有一天,我会夺回属于我的一切。The Fool taught you to begin.The World reminds you that every ending is simply the next beginning. Now... shuffle again.",
+      wifeMessage: "总有一天, 我会夺回属于我的一切。The Fool taught you to begin.The World reminds you that every ending is simply the next beginning. Now... shuffle again.",
     },
   },
 ];
