@@ -90,11 +90,11 @@ export const cards: TarotCard[] = [
     image: "/cards/the-hierophant.png",
     upright: {
       message: "A familiar practice or trusted piece of wisdom may help you feel grounded. Ask what has supported you before, what still feels true, and what small ritual can bring you back to yourself.",
-      wifeMessage: "Your way of seeing the world is precious. I love the softness and wisdom in you.",
+      wifeMessage: "今天我们每个人都是每个人的老师, 正所谓三人行必有我师。你是我的老师，我是你的老师。但你日我的老师, 我也日你的老师。",
     },
     reversed: {
       message: "Question rules that no longer fit your heart. Keep the wisdom that supports you, and release the pressure that only makes you smaller. Your own path is allowed to be valid.",
-      wifeMessage: "You are allowed to choose your own way. I love you most when you are fully yourself.",
+      wifeMessage: "....那鲁迅当独立营团长时候说了, 从前特娘的本没有路, 走的人多了, 也便成了路。二营长, 把意大利炮拉出来给我打。",
     },
   },
   {
@@ -108,7 +108,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "Something may feel misaligned between what you want, say, do, or accept. Do not rush to make it look harmonious. A gentle truth is better than a pretty silence that makes you disappear.",
-      wifeMessage: "Your feelings matter to me, even the complicated ones. We can be honest and still be close. 把麦打开好吗？",
+      wifeMessage: "Your feelings matter to me, even the complicated ones. We can be honest and still be close. 所以把麦打开好吗？",
     },
   },
   {
