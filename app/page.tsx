@@ -6,6 +6,7 @@ import { cards } from "@/data/cards";
 
 const cardStep = 38;
 const tapThreshold = 8;
+const selectedCardScale = 1.12;
 
 function getChosenCard(index: number) {
   const card = cards[index];
@@ -25,25 +26,31 @@ function getChosenCard(index: number) {
 export default function Home() {
   const [flipped, setFlipped] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [drawing, setDrawing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(10);
   const [dragStartX, setDragStartX] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [card, setCard] = useState(() => getChosenCard(10));
 
   const handleDraw = () => {
-    if (flipped) return;
+    if (flipped || drawing) return;
 
     setCard(getChosenCard(selectedIndex));
-    setFlipped(true);
+    setDrawing(true);
 
     setTimeout(() => {
-      setRevealed(true);
-    }, 1000);
+      setFlipped(true);
+
+      setTimeout(() => {
+        setRevealed(true);
+      }, 1000);
+    }, 180);
   };
 
   const reset = () => {
     setFlipped(false);
     setRevealed(false);
+    setDrawing(false);
   };
 
   const moveSelection = (delta: number) => {
@@ -117,6 +124,7 @@ export default function Home() {
         className={`
           transition-all duration-1000 ease-out
           ${revealed ? "mt-2 -translate-y-2 scale-[0.92]" : "mt-12"}
+          ${drawing && !flipped ? "scale-[0.96] duration-150" : ""}
         `}
       >
         {!flipped ? (
@@ -144,8 +152,8 @@ export default function Home() {
               const visible = Math.abs(rawDistance) <= 4.5;
               const x = rawDistance * cardStep;
               const absoluteDistance = Math.min(Math.abs(rawDistance), 4);
-              const scale = 1 - absoluteDistance * 0.055;
-              const rotate = rawDistance * -4.5;
+              const scale = selectedCardScale - absoluteDistance * 0.08;
+              const rotate = rawDistance * 0;
               const isFocused = Math.abs(rawDistance) < 0.5;
 
               return (
@@ -192,7 +200,7 @@ export default function Home() {
               [transform-style:preserve-3d]
             "
             style={{
-              transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              transform: `scale(${selectedCardScale}) rotateY(${flipped ? 180 : 0}deg)`,
             }}
           >
             {/* BACK */}
@@ -219,7 +227,7 @@ export default function Home() {
       {/* HINT */}
       <p
         className={`
-          mt-2 text-sm text-gray-400 transition-all duration-500
+          mt-8 text-sm text-gray-400 transition-all duration-500
           ${revealed ? "opacity-0 pointer-events-none" : "opacity-100"}
         `}
       >
