@@ -4,7 +4,8 @@ import type { PointerEvent } from "react";
 import { useState } from "react";
 import { cards } from "@/data/cards";
 
-const swipeThreshold = 42;
+const cardStep = 38;
+const tapThreshold = 8;
 
 function getChosenCard(index: number) {
   const card = cards[index];
@@ -45,15 +46,11 @@ export default function Home() {
     setRevealed(false);
   };
 
-  const moveSelection = (direction: -1 | 1) => {
+  const moveSelection = (delta: number) => {
     setSelectedIndex((current) => {
-      const nextIndex = current + direction;
+      const nextIndex = current + delta;
 
-      if (nextIndex < 0 || nextIndex >= cards.length) {
-        return current;
-      }
-
-      return nextIndex;
+      return Math.max(0, Math.min(cards.length - 1, nextIndex));
     });
   };
 
@@ -69,23 +66,24 @@ export default function Home() {
     if (dragStartX === null || flipped) return;
 
     const nextOffset = event.clientX - dragStartX;
-    setDragOffset(Math.max(-86, Math.min(86, nextOffset)));
+    const minOffset = (selectedIndex - (cards.length - 1)) * cardStep;
+    const maxOffset = selectedIndex * cardStep;
+
+    setDragOffset(Math.max(minOffset, Math.min(maxOffset, nextOffset)));
   };
 
   const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
     if (dragStartX === null || flipped) return;
 
-    const finalOffset = event.clientX - dragStartX;
+    const rawOffset = event.clientX - dragStartX;
+    const minOffset = (selectedIndex - (cards.length - 1)) * cardStep;
+    const maxOffset = selectedIndex * cardStep;
+    const finalOffset = Math.max(minOffset, Math.min(maxOffset, rawOffset));
     setDragStartX(null);
     setDragOffset(0);
 
-    if (finalOffset <= -swipeThreshold) {
-      moveSelection(1);
-      return;
-    }
-
-    if (finalOffset >= swipeThreshold) {
-      moveSelection(-1);
+    if (Math.abs(finalOffset) > tapThreshold) {
+      moveSelection(Math.round(-finalOffset / cardStep));
       return;
     }
 
@@ -142,11 +140,13 @@ export default function Home() {
             "
           >
             {cards.map((choice, index) => {
-              const distance = index - selectedIndex;
-              const visible = Math.abs(distance) <= 2;
-              const x = distance * 54 + dragOffset;
-              const scale = distance === 0 ? 1 : 0.86 - Math.min(Math.abs(distance), 2) * 0.06;
-              const rotate = distance * -7;
+              const rawDistance = index - selectedIndex + dragOffset / cardStep;
+              const visible = Math.abs(rawDistance) <= 4.5;
+              const x = rawDistance * cardStep;
+              const absoluteDistance = Math.min(Math.abs(rawDistance), 4);
+              const scale = 1 - absoluteDistance * 0.055;
+              const rotate = rawDistance * -4.5;
+              const isFocused = Math.abs(rawDistance) < 0.5;
 
               return (
                 <div
@@ -161,10 +161,11 @@ export default function Home() {
                     rounded-2xl
                     ${dragStartX === null ? "transition-[transform,opacity,filter] duration-300 ease-out" : "transition-[opacity,filter] duration-150"}
                     ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}
-                    ${index === selectedIndex ? "z-30" : "z-10 brightness-75"}
+                    ${isFocused ? "z-30" : "z-10 brightness-75"}
                   `}
                   style={{
                     transform: `translateX(calc(-50% + ${x}px)) scale(${scale}) rotate(${rotate}deg)`,
+                    zIndex: Math.round(100 - Math.abs(rawDistance) * 10),
                   }}
                 >
                   <span className="block h-full w-full overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
