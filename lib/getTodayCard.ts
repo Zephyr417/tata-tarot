@@ -1,8 +1,10 @@
 import { cards, type TarotCard } from "@/data/cards";
 
-export type TodayCard = TarotCard & {
+export type TodayCard = Omit<TarotCard, "upright" | "reversed"> & {
   dateKey: string;
   reversed: boolean;
+  message: string;
+  wifeMessage: string;
 };
 
 function getLocalDateKey(date: Date) {
@@ -27,10 +29,17 @@ export function getTodayCard(date = new Date()): TodayCard {
   const dateKey = getLocalDateKey(date);
   const cardIndex = hashText(dateKey) % cards.length;
   const reversed = hashText(`${dateKey}-reversed`) % 2 === 1;
+  const card = cards[cardIndex];
+  const reading = reversed ? card.reversed : card.upright;
 
   return {
-    ...cards[cardIndex],
+    id: card.id,
+    name: card.name,
+    chinese: card.chinese,
+    image: card.image,
     dateKey,
     reversed,
+    message: reading.message,
+    wifeMessage: reading.wifeMessage,
   };
 }
