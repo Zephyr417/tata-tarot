@@ -28,7 +28,7 @@ export default function Home() {
           text-center
           mt-15
           transition-all duration-700
-          ${revealed ? "opacity-0 -translate-y-4" : "opacity-100"}
+          ${revealed ? "opacity-0 -translate-y-4 pointer-events-auto" : "opacity-100"}
         `}
       >
         <div className="text-6xl">✨</div>
@@ -88,7 +88,7 @@ export default function Home() {
             absolute right-10 top-1/2 -translate-y-70
             text-white max-w-md
             transition-all duration-1000
-            ${revealed ? "opacity-100 -translate-x-50" : "opacity-0 translate-x-10"}
+            ${revealed ? "opacity-100 -translate-x-50 pointer-events-auto" : "opacity-0 translate-x-10 pointer-events-auto"}
           `}
         >
           <div className="text-6xl">🌙</div>
