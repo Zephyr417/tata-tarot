@@ -22,7 +22,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-6 py-10 overflow-hidden text-white">
+    <main className="h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-6 py-6 overflow-hidden text-white">
       {/* HEADER */}
       <div
         className={`
