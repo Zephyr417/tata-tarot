@@ -8,7 +8,57 @@ const cardStep = 38;
 const tapThreshold = 8;
 const selectedCardScale = 1.12;
 
-function getChosenCard(index: number) {
+type DrawBehavior = {
+  selectedIndex: number;
+};
+
+function getRandomUint32() {
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    return crypto.getRandomValues(new Uint32Array(1))[0];
+  }
+
+  return Math.floor(Math.random() * 2 ** 32);
+}
+
+function mixSeed(seed: number, value: number) {
+  let mixed = (seed ^ value) >>> 0;
+
+  mixed = Math.imul(mixed ^ (mixed >>> 16), 2_246_822_519);
+  mixed = Math.imul(mixed ^ (mixed >>> 13), 3_266_489_917);
+
+  return (mixed ^ (mixed >>> 16)) >>> 0;
+}
+
+function shuffleCards(seed: number) {
+  const deck = [...cards];
+  let nextSeed = seed;
+
+  for (let index = deck.length - 1; index > 0; index -= 1) {
+    nextSeed = mixSeed(nextSeed, index);
+    const swapIndex = nextSeed % (index + 1);
+    const current = deck[index];
+
+    deck[index] = deck[swapIndex];
+    deck[swapIndex] = current;
+  }
+
+  return deck.map((card, index) => {
+    const reversed = mixSeed(seed, index + 100) % 2 === 1;
+    const reading = reversed ? card.reversed : card.upright;
+
+    return {
+      id: card.id,
+      name: card.name,
+      chinese: card.chinese,
+      image: card.image,
+      reversed,
+      message: reading.message,
+      wifeMessage: reading.wifeMessage,
+    };
+  });
+}
+
+function getPreviewCard(index: number) {
   const card = cards[index];
   const reading = card.upright;
 
@@ -23,6 +73,10 @@ function getChosenCard(index: number) {
   };
 }
 
+function getDrawnCard(behavior: DrawBehavior, sessionDeck: ReturnType<typeof shuffleCards>) {
+  return sessionDeck[behavior.selectedIndex];
+}
+
 export default function Home() {
   const [flipped, setFlipped] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -30,12 +84,18 @@ export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState(10);
   const [dragStartX, setDragStartX] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
-  const [card, setCard] = useState(() => getChosenCard(10));
+  const [card, setCard] = useState(() => getPreviewCard(10));
+  const [sessionSeed] = useState(() => getRandomUint32());
+  const [sessionDeck] = useState(() => shuffleCards(sessionSeed));
 
   const handleDraw = () => {
     if (flipped || drawing) return;
 
-    setCard(getChosenCard(selectedIndex));
+    setCard(
+      getDrawnCard({
+        selectedIndex,
+      }, sessionDeck),
+    );
     setDrawing(true);
 
     setTimeout(() => {
@@ -115,7 +175,7 @@ export default function Home() {
         </h1>
 
         <p className="mt-4 text-lg leading-relaxed">
-          What&apos;s the otter&apos;s little surprise today?
+          What&apos;s the otter&apos;s little surprise for now?
         </p>
       </div>
 
@@ -124,7 +184,6 @@ export default function Home() {
         className={`
           transition-all duration-1000 ease-out
           ${revealed ? "mt-2 -translate-y-2 scale-[0.92]" : "mt-12"}
-          ${drawing && !flipped ? "scale-[0.96] duration-150" : ""}
         `}
       >
         {!flipped ? (
@@ -155,6 +214,7 @@ export default function Home() {
               const scale = selectedCardScale - absoluteDistance * 0.08;
               const rotate = rawDistance * 0;
               const isFocused = Math.abs(rawDistance) < 0.5;
+              const pressedScale = drawing && isFocused ? scale * 0.86 : scale;
 
               return (
                 <div
@@ -172,7 +232,7 @@ export default function Home() {
                     ${isFocused ? "z-30" : "z-10 brightness-75"}
                   `}
                   style={{
-                    transform: `translateX(calc(-50% + ${x}px)) scale(${scale}) rotate(${rotate}deg)`,
+                    transform: `translateX(calc(-50% + ${x}px)) scale(${pressedScale}) rotate(${rotate}deg)`,
                     zIndex: Math.round(100 - Math.abs(rawDistance) * 10),
                   }}
                 >
