@@ -1,7 +1,7 @@
 "use client";
 
 import type { PointerEvent } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cards } from "@/data/cards";
 
 const cardStep = 38;
@@ -23,6 +23,167 @@ type WeatherSummary = {
   temperature: number;
   label: string;
 };
+
+type AmbientNodes = {
+  source: AudioBufferSourceNode;
+  gain: GainNode;
+  filter: BiquadFilterNode;
+};
+
+function createNoiseBuffer(audioContext: AudioContext, duration: number) {
+  const sampleCount = Math.floor(audioContext.sampleRate * duration);
+  const buffer = audioContext.createBuffer(1, sampleCount, audioContext.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  for (let index = 0; index < sampleCount; index += 1) {
+    data[index] = Math.random() * 2 - 1;
+  }
+
+  return buffer;
+}
+
+function useMysticAudio() {
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const ambientRef = useRef<AmbientNodes | null>(null);
+  const chimeTimerRef = useRef<number | null>(null);
+  const lastSlideSoundRef = useRef(0);
+
+  const getAudioContext = async () => {
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+
+    if (!AudioContextClass) {
+      return null;
+    }
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContextClass();
+    }
+
+    if (audioContextRef.current.state === "suspended") {
+      await audioContextRef.current.resume();
+    }
+
+    return audioContextRef.current;
+  };
+
+  const playBell = (audioContext: AudioContext, frequency: number, volume = 0.035) => {
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const filter = audioContext.createBiquadFilter();
+
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, now);
+    filter.type = "highpass";
+    filter.frequency.setValueAtTime(420, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(volume, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+
+    oscillator.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 1.5);
+  };
+
+  const startAmbient = async () => {
+    const audioContext = await getAudioContext();
+
+    if (!audioContext) {
+      return;
+    }
+
+    if (!ambientRef.current) {
+      const source = audioContext.createBufferSource();
+      const filter = audioContext.createBiquadFilter();
+      const gain = audioContext.createGain();
+
+      source.buffer = createNoiseBuffer(audioContext, 2);
+      source.loop = true;
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(900, audioContext.currentTime);
+      gain.gain.setValueAtTime(0.012, audioContext.currentTime);
+
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioContext.destination);
+      source.start();
+      ambientRef.current = { source, gain, filter };
+    }
+
+    if (chimeTimerRef.current === null) {
+      chimeTimerRef.current = window.setInterval(() => {
+        if (!audioContextRef.current) return;
+
+        const notes = [784, 932, 1175, 1397];
+        const note = notes[Math.floor(Math.random() * notes.length)];
+
+        playBell(audioContextRef.current, note, 0.018);
+      }, 4600);
+    }
+  };
+
+  const playSlide = async () => {
+    const now = performance.now();
+
+    if (now - lastSlideSoundRef.current < 90) {
+      return;
+    }
+
+    lastSlideSoundRef.current = now;
+    const audioContext = await getAudioContext();
+
+    if (!audioContext) {
+      return;
+    }
+
+    playBell(audioContext, 1100 + Math.random() * 160, 0.018);
+  };
+
+  const playFlip = async () => {
+    const audioContext = await getAudioContext();
+
+    if (!audioContext) {
+      return;
+    }
+
+    const now = audioContext.currentTime;
+    const source = audioContext.createBufferSource();
+    const filter = audioContext.createBiquadFilter();
+    const gain = audioContext.createGain();
+
+    source.buffer = createNoiseBuffer(audioContext, 0.85);
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(1250, now);
+    filter.Q.setValueAtTime(0.65, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.075, now + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.78);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioContext.destination);
+    source.start(now);
+    source.stop(now + 0.85);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (chimeTimerRef.current !== null) {
+        window.clearInterval(chimeTimerRef.current);
+      }
+
+      ambientRef.current?.source.stop();
+      void audioContextRef.current?.close();
+    };
+  }, []);
+
+  return { playFlip, playSlide, startAmbient };
+}
 
 function getWeatherLabel(code: number) {
   if (code === 0) return "Clear";
@@ -383,6 +544,7 @@ export default function Home() {
   const [sessionSeed] = useState(() => getRandomUint32());
   const [sessionDeck] = useState(() => shuffleCards(sessionSeed));
   const [todayCardRecord, setTodayCardRecord] = useState<TodayCardRecord | null>(null);
+  const { playFlip, playSlide, startAmbient } = useMysticAudio();
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -394,6 +556,9 @@ export default function Home() {
 
   const handleDraw = () => {
     if (flipped || drawing) return;
+
+    void startAmbient();
+    void playFlip();
 
     const drawnCard = getDrawnCard({
       selectedIndex,
@@ -420,16 +585,19 @@ export default function Home() {
   };
 
   const moveSelection = (delta: number) => {
-    setSelectedIndex((current) => {
-      const nextIndex = current + delta;
+    const nextIndex = Math.max(0, Math.min(cards.length - 1, selectedIndex + delta));
 
-      return Math.max(0, Math.min(cards.length - 1, nextIndex));
-    });
+    if (nextIndex !== selectedIndex) {
+      void playSlide();
+    }
+
+    setSelectedIndex(nextIndex);
   };
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (flipped) return;
 
+    void startAmbient();
     setDragStartX(event.clientX);
     setDragOffset(0);
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -593,7 +761,7 @@ export default function Home() {
       {/* HINT */}
       <p
         className={`
-          mt-8 text-sm text-gray-400 transition-all duration-500
+          mt-10 text-sm text-gray-400 transition-all duration-500
           ${revealed ? "opacity-0 pointer-events-none" : "opacity-100"}
         `}
       >
@@ -602,7 +770,7 @@ export default function Home() {
 
       <p
         className={`
-          mt-4 max-w-xs text-center text-xs leading-relaxed text-amber-100/65
+          mt-6 max-w-xs text-center text-xs leading-relaxed text-amber-100/65
           transition-all duration-500
           ${todayCardRecord && !drawing && !flipped && !revealed ? "opacity-100" : "opacity-0 pointer-events-none"}
         `}
