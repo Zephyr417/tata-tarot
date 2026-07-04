@@ -30,12 +30,18 @@ function getWeatherLabel(code: number) {
 }
 
 function formatDublinDate() {
-  return new Intl.DateTimeFormat("en-IE", {
-    weekday: "short",
-    month: "short",
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-IE", {
+    year: "numeric",
+    month: "numeric",
     day: "numeric",
+    weekday: "short",
     timeZone: "Europe/Dublin",
-  }).format(new Date());
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+
+  return `${value("year")}.${value("month")}.${value("day")}, ${value("weekday")}`;
 }
 
 function getRandomUint32() {
@@ -171,17 +177,17 @@ function HomeStatusBar({ hidden }: { hidden: boolean }) {
     <div
       className={`
         absolute left-1/2 top-[max(12px,env(safe-area-inset-top))]
-        z-20 flex w-[calc(100%-48px)] max-w-sm -translate-x-1/2
-        items-center justify-between rounded-full border border-white/10
+        z-20 grid w-[calc(100%-48px)] max-w-sm -translate-x-1/2
+        grid-cols-[1fr_auto_1fr] items-center rounded-full border border-white/10
         bg-white/[0.07] px-4 py-2 text-xs text-white/75
         shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-md
         transition-all duration-700 ease-out
         ${hidden ? "opacity-0 -translate-y-3 pointer-events-none" : "opacity-100"}
       `}
     >
-      <span>{dateLabel || "Today"}</span>
-      <span className="text-white/45">Dublin</span>
-      <span>
+      <span className="justify-self-start">{dateLabel || "Today"}</span>
+      <span className="justify-self-center text-white/45">Dublin</span>
+      <span className="justify-self-end text-right">
         {weather
           ? `${weather.label} · ${weather.temperature}°C`
           : weatherFailed
