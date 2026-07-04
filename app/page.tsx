@@ -7,6 +7,8 @@ export default function Home() {
   const [revealed, setRevealed] = useState(false);
 
   const handleDraw = () => {
+    if (flipped) return;
+
     setFlipped(true);
 
     setTimeout(() => {
@@ -20,15 +22,15 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen relative flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-6">
+    <main className="min-h-screen relative flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-6 overflow-hidden">
 
       {/* ================= HEADER ================= */}
       <div
         className={`
           text-center
-          mt-15
+          mt-[60px]
           transition-all duration-700
-          ${revealed ? "opacity-0 -translate-y-4 pointer-events-auto" : "opacity-100"}
+          ${revealed ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100 pointer-events-none"}
         `}
       >
         <div className="text-6xl">✨</div>
@@ -38,7 +40,7 @@ export default function Home() {
         </h1>
 
         <p className="mt-4 text-xl text-white">
-          What's the otter's little surprise today？
+          What's the otter's little surprise today?
         </p>
       </div>
 
@@ -47,48 +49,58 @@ export default function Home() {
 
         {/* 卡牌：真正居中 */}
         <div className="flex items-center justify-center w-full">
-          <div
-            onClick={!flipped ? handleDraw : undefined}
+
+          <button
+            type="button"
+            onClick={handleDraw}
+            onTouchStart={handleDraw}
+            disabled={flipped}
             className={`
               h-96
               w-60
               relative
+              z-50
               cursor-pointer
+              touch-manipulation
               transition-all
               duration-1000
               [transform-style:preserve-3d]
-              ${revealed ? "-translate-x-70 -translate-y-14 scale-150" : ""}
+              bg-transparent
+              border-0
+              p-0
+              ${revealed ? "-translate-x-[280px] -translate-y-14 scale-150" : ""}
             `}
             style={{
               transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
             }}
           >
             {/* BACK */}
-            <div className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
               <img
                 src="/cards/back.png"
-                className="w-full h-full object-cover"
+                alt="tarot card back"
+                className="w-full h-full object-cover pointer-events-none"
               />
             </div>
 
             {/* FRONT */}
-            <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-white flex items-center justify-center shadow-2xl">
-              <div className="text-center text-black">
+            <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-white flex items-center justify-center shadow-2xl pointer-events-none">
+              <div className="text-center text-black pointer-events-none">
                 <div className="text-4xl">🌙</div>
                 <div className="mt-2 font-bold text-xl">The Moon</div>
                 <div className="text-sm text-gray-500">Reversed</div>
               </div>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* ================= RESULT OVERLAY ================= */}
         <div
           className={`
-            absolute right-10 top-1/2 -translate-y-70
+            absolute right-10 top-1/2 -translate-y-[280px]
             text-white max-w-md
             transition-all duration-1000
-            ${revealed ? "opacity-100 -translate-x-50 pointer-events-auto" : "opacity-0 translate-x-10 pointer-events-auto"}
+            ${revealed ? "opacity-100 -translate-x-[200px] pointer-events-auto" : "opacity-0 translate-x-10 pointer-events-none"}
           `}
         >
           <div className="text-6xl">🌙</div>
@@ -113,7 +125,7 @@ export default function Home() {
           <button
             onClick={reset}
             className="
-              mt-30
+              mt-[120px]
               px-6
               py-3
               rounded-full
