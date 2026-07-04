@@ -30,6 +30,10 @@ type AmbientNodes = {
   filter: BiquadFilterNode;
 };
 
+const windChimeNotes = [
+  880, 988, 1047, 1175, 1319, 1480, 1568, 1760, 1976, 2093, 2349,
+];
+
 function createNoiseBuffer(audioContext: AudioContext, duration: number) {
   const sampleCount = Math.floor(audioContext.sampleRate * duration);
   const buffer = audioContext.createBuffer(1, sampleCount, audioContext.sampleRate);
@@ -45,8 +49,9 @@ function createNoiseBuffer(audioContext: AudioContext, duration: number) {
 function useMysticAudio() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientRef = useRef<AmbientNodes | null>(null);
-  const chimeTimerRef = useRef<number | null>(null);
+  const chimeTimeoutRef = useRef<number | null>(null);
   const lastSlideSoundRef = useRef(0);
+  const unlockedRef = useRef(false);
 
   const getAudioContext = async () => {
     const AudioContextClass =
@@ -69,6 +74,28 @@ function useMysticAudio() {
     return audioContextRef.current;
   };
 
+  const unlockAudio = async () => {
+    const audioContext = await getAudioContext();
+
+    if (!audioContext || unlockedRef.current) {
+      return audioContext;
+    }
+
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.frequency.setValueAtTime(440, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.03);
+    unlockedRef.current = true;
+
+    return audioContext;
+  };
+
   const playBell = (audioContext: AudioContext, frequency: number, volume = 0.016) => {
     const now = audioContext.currentTime;
     const oscillator = audioContext.createOscillator();
@@ -78,7 +105,7 @@ function useMysticAudio() {
     oscillator.type = "sine";
     oscillator.frequency.setValueAtTime(frequency, now);
     filter.type = "highpass";
-    filter.frequency.setValueAtTime(1300, now);
+    filter.frequency.setValueAtTime(760, now);
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(volume, now + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.1);
@@ -91,7 +118,7 @@ function useMysticAudio() {
   };
 
   const startAmbient = async () => {
-    const audioContext = await getAudioContext();
+    const audioContext = await unlockAudio();
 
     if (!audioContext) {
       return;
@@ -115,15 +142,38 @@ function useMysticAudio() {
       ambientRef.current = { source, gain, filter };
     }
 
-    if (chimeTimerRef.current === null) {
-      chimeTimerRef.current = window.setInterval(() => {
-        if (!audioContextRef.current) return;
+    if (chimeTimeoutRef.current === null) {
+      const scheduleNextChime = () => {
+        const delay = 1400 + Math.random() * 1900;
 
-        const notes = [1568, 1760, 2093, 2349, 2637];
-        const note = notes[Math.floor(Math.random() * notes.length)];
+        chimeTimeoutRef.current = window.setTimeout(() => {
+          if (!audioContextRef.current) {
+            chimeTimeoutRef.current = null;
+            return;
+          }
 
-        playBell(audioContextRef.current, note, 0.01 + Math.random() * 0.007);
-      }, 6200);
+          const chimeCount = Math.random() > 0.72 ? 2 : 1;
+
+          for (let index = 0; index < chimeCount; index += 1) {
+            window.setTimeout(() => {
+              const activeContext = audioContextRef.current;
+
+              if (!activeContext) {
+                return;
+              }
+
+              const note =
+                windChimeNotes[Math.floor(Math.random() * windChimeNotes.length)];
+
+              playBell(activeContext, note, 0.009 + Math.random() * 0.006);
+            }, index * (130 + Math.random() * 170));
+          }
+
+          scheduleNextChime();
+        }, delay);
+      };
+
+      scheduleNextChime();
     }
   };
 
@@ -195,8 +245,8 @@ function useMysticAudio() {
 
   useEffect(() => {
     return () => {
-      if (chimeTimerRef.current !== null) {
-        window.clearInterval(chimeTimerRef.current);
+      if (chimeTimeoutRef.current !== null) {
+        window.clearTimeout(chimeTimeoutRef.current);
       }
 
       ambientRef.current?.source.stop();
@@ -204,7 +254,7 @@ function useMysticAudio() {
     };
   }, []);
 
-  return { playFlip, playSlide, startAmbient };
+  return { playFlip, playSlide, startAmbient, unlockAudio };
 }
 
 function getWeatherLabel(code: number) {
@@ -566,7 +616,7 @@ export default function Home() {
   const [sessionSeed] = useState(() => getRandomUint32());
   const [sessionDeck] = useState(() => shuffleCards(sessionSeed));
   const [todayCardRecord, setTodayCardRecord] = useState<TodayCardRecord | null>(null);
-  const { playFlip, playSlide, startAmbient } = useMysticAudio();
+  const { playFlip, playSlide, startAmbient, unlockAudio } = useMysticAudio();
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -623,6 +673,13 @@ export default function Home() {
     setDragStartX(event.clientX);
     setDragOffset(0);
     event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleTouchStart = () => {
+    if (flipped) return;
+
+    void unlockAudio();
+    void startAmbient();
   };
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -686,6 +743,7 @@ export default function Home() {
           <div
             aria-label="Choose a tarot card"
             onPointerDown={handlePointerDown}
+            onTouchStart={handleTouchStart}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={() => {
