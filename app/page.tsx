@@ -22,34 +22,32 @@ export default function Home() {
   };
 
   return (
-    <main className="h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-6 py-6 overflow-hidden text-white">
+    <main className="h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white">
+      <div className="mx-auto flex h-full w-full max-w-[430px] flex-col items-center px-6 pb-[max(24px,env(safe-area-inset-bottom))] pt-[max(40px,env(safe-area-inset-top))]">
       {/* HEADER */}
       <div
         className={`
           text-center
-          transition-all duration-700
-          ${revealed ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100"}
+          transition-all duration-700 ease-out
+          ${revealed ? "h-0 opacity-0 -translate-y-4 pointer-events-none" : "h-[238px] opacity-100"}
         `}
       >
-        <div className="text-5xl">✨</div>
+        <div className="pt-20 text-4xl">✨</div>
 
         <h1 className="mt-4 text-5xl font-bold">
           Tata&apos;s Tarot
         </h1>
 
         <p className="mt-4 text-lg leading-relaxed">
-          What&apos;s the otter&apos;s
-          <br />
-          little surprise today?
+          What&apos;s the otter&apos;s little surprise today?
         </p>
       </div>
 
       {/* CARD */}
       <div
         className={`
-          mt-12
-          transition-all duration-1000
-          ${revealed ? "-translate-y-32 scale-95" : ""}
+          transition-all duration-1000 ease-out
+          ${revealed ? "mt-4 -translate-y-2 scale-[0.92]" : "mt-12"}
         `}
       >
         <div
@@ -57,8 +55,8 @@ export default function Home() {
           tabIndex={0}
           onPointerUp={handleDraw}
           className="
-            h-96
-            w-60
+            h-80
+            w-52
             relative
             z-50
             cursor-pointer
@@ -82,12 +80,12 @@ export default function Home() {
           </div>
 
           {/* FRONT */}
-          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-white flex items-center justify-center shadow-2xl pointer-events-none">
-            <div className="text-center text-black pointer-events-none">
-              <div className="text-4xl">🌙</div>
-              <div className="mt-2 font-bold text-xl">The Moon</div>
-              <div className="text-sm text-gray-500">Reversed</div>
-            </div>
+          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
+            <img
+              src="/cards/the moon.png"
+              alt="The Moon"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
@@ -95,7 +93,7 @@ export default function Home() {
       {/* HINT */}
       <p
         className={`
-          mt-6 text-sm text-gray-400 transition-all duration-500
+          mt-2 text-sm text-gray-400 transition-all duration-500
           ${revealed ? "opacity-0 pointer-events-none" : "opacity-100"}
         `}
       >
@@ -105,18 +103,19 @@ export default function Home() {
       {/* RESULT */}
       <div
         className={`
-          -mt-10
+          mt-2
           w-full
           max-w-sm
           text-center
           transition-all
           duration-1000
-          ${revealed ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none"}
+          ease-out
+          ${revealed ? "opacity-100 -translate-y-4 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none"}
         `}
       >
         <div className="text-5xl">🌙</div>
 
-        <h2 className="mt-4 text-4xl font-bold">
+        <h2 className="mt-2 text-4xl font-bold">
           The Moon
         </h2>
 
@@ -124,7 +123,7 @@ export default function Home() {
           Reversed
         </p>
 
-        <p className="mt-6 text-base leading-relaxed text-gray-100">
+        <p className="mt-2 text-base leading-relaxed text-gray-100">
           Don&apos;t let fear stop you from moving forward.
           Trust your intuition and inner voice.
         </p>
@@ -149,6 +148,7 @@ export default function Home() {
         >
           Draw Again
         </button>
+      </div>
       </div>
     </main>
   );
