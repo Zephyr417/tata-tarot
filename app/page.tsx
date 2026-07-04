@@ -1,16 +1,38 @@
 "use client";
 
+import type { PointerEvent } from "react";
 import { useState } from "react";
-import { getTodayCard } from "@/lib/getTodayCard";
+import { cards } from "@/data/cards";
+
+const swipeThreshold = 42;
+
+function getChosenCard(index: number) {
+  const card = cards[index];
+  const reading = card.upright;
+
+  return {
+    id: card.id,
+    name: card.name,
+    chinese: card.chinese,
+    image: card.image,
+    reversed: false,
+    message: reading.message,
+    wifeMessage: reading.wifeMessage,
+  };
+}
 
 export default function Home() {
   const [flipped, setFlipped] = useState(false);
   const [revealed, setRevealed] = useState(false);
-  const [card] = useState(() => getTodayCard());
+  const [selectedIndex, setSelectedIndex] = useState(10);
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [card, setCard] = useState(() => getChosenCard(10));
 
   const handleDraw = () => {
     if (flipped) return;
 
+    setCard(getChosenCard(selectedIndex));
     setFlipped(true);
 
     setTimeout(() => {
@@ -21,6 +43,53 @@ export default function Home() {
   const reset = () => {
     setFlipped(false);
     setRevealed(false);
+  };
+
+  const moveSelection = (direction: -1 | 1) => {
+    setSelectedIndex((current) => {
+      const nextIndex = current + direction;
+
+      if (nextIndex < 0 || nextIndex >= cards.length) {
+        return current;
+      }
+
+      return nextIndex;
+    });
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (flipped) return;
+
+    setDragStartX(event.clientX);
+    setDragOffset(0);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStartX === null || flipped) return;
+
+    const nextOffset = event.clientX - dragStartX;
+    setDragOffset(Math.max(-86, Math.min(86, nextOffset)));
+  };
+
+  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStartX === null || flipped) return;
+
+    const finalOffset = event.clientX - dragStartX;
+    setDragStartX(null);
+    setDragOffset(0);
+
+    if (finalOffset <= -swipeThreshold) {
+      moveSelection(1);
+      return;
+    }
+
+    if (finalOffset >= swipeThreshold) {
+      moveSelection(-1);
+      return;
+    }
+
+    handleDraw();
   };
 
   return (
@@ -52,44 +121,98 @@ export default function Home() {
           ${revealed ? "mt-2 -translate-y-2 scale-[0.92]" : "mt-12"}
         `}
       >
-        <div
-          role="button"
-          tabIndex={0}
-          onPointerUp={handleDraw}
-          className="
-            h-80
-            w-52
-            relative
-            z-50
-            cursor-pointer
-            touch-manipulation
-            select-none
-            transition-transform
-            duration-1000
-            [transform-style:preserve-3d]
-          "
-          style={{
-            transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          }}
-        >
-          {/* BACK */}
-          <div className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
-            <img
-              src="/cards/back.png"
-              alt="tarot card back"
-              className="w-full h-full object-cover pointer-events-none"
-            />
-          </div>
+        {!flipped ? (
+          <div
+            aria-label="Choose a tarot card"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={() => {
+              setDragStartX(null);
+              setDragOffset(0);
+            }}
+            className="
+              relative
+              h-80
+              w-screen
+              max-w-[430px]
+              touch-pan-y
+              select-none
+              overflow-visible
+            "
+          >
+            {cards.map((choice, index) => {
+              const distance = index - selectedIndex;
+              const visible = Math.abs(distance) <= 2;
+              const x = distance * 54 + dragOffset;
+              const scale = distance === 0 ? 1 : 0.86 - Math.min(Math.abs(distance), 2) * 0.06;
+              const rotate = distance * -7;
 
-          {/* FRONT */}
-          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
-            <img
-              src={card.image}
-              alt={card.name}
-              className={`w-full h-full object-cover ${card.reversed ? "rotate-180" : ""}`}
-            />
+              return (
+                <div
+                  key={choice.id}
+                  aria-label={`Choose card ${index + 1}`}
+                  className={`
+                    absolute
+                    left-1/2
+                    top-0
+                    h-80
+                    w-52
+                    rounded-2xl
+                    ${dragStartX === null ? "transition-[transform,opacity,filter] duration-300 ease-out" : "transition-[opacity,filter] duration-150"}
+                    ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}
+                    ${index === selectedIndex ? "z-30" : "z-10 brightness-75"}
+                  `}
+                  style={{
+                    transform: `translateX(calc(-50% + ${x}px)) scale(${scale}) rotate(${rotate}deg)`,
+                  }}
+                >
+                  <span className="block h-full w-full overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
+                    <img
+                      src="/cards/back.png"
+                      alt=""
+                      className="h-full w-full object-cover pointer-events-none"
+                    />
+                  </span>
+                </div>
+              );
+            })}
           </div>
-        </div>
+        ) : (
+          <div
+            className="
+              h-80
+              w-52
+              relative
+              z-50
+              select-none
+              transition-transform
+              duration-1000
+              [transform-style:preserve-3d]
+            "
+            style={{
+              transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+            }}
+          >
+            {/* BACK */}
+            <div className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
+              <img
+                src="/cards/back.png"
+                alt="tarot card back"
+                className="w-full h-full object-cover pointer-events-none"
+              />
+            </div>
+
+            {/* FRONT */}
+            <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
+              <img
+                src={card.image}
+                alt={card.name}
+                className={`w-full h-full object-cover ${card.reversed ? "rotate-180" : ""}`}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* HINT */}
@@ -99,7 +222,7 @@ export default function Home() {
           ${revealed ? "opacity-0 pointer-events-none" : "opacity-100"}
         `}
       >
-        Tap the magic card to reveal today&apos;s tarot
+        Swipe to choose. Tap the center card to reveal.
       </p>
 
       {/* RESULT */}
