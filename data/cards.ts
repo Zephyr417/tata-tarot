@@ -160,7 +160,7 @@ export const cards: TarotCard[] = [
     image: "/cards/wheel-of-fortune.png",
     upright: {
       message: "Movement is happening, even if you cannot control every turn. Stay flexible and notice the opening when it appears. Meet change with curiosity instead of gripping the wheel too tightly.",
-      wifeMessage: "大摆钟来喽！机不可失, 失不再来, 来日方丈, 方丈不同意.....你是不是看成来日方长了?",
+      wifeMessage: "大摆钟来喽！机不可失, 失不再来, 来日方丈, 方丈不同意.....你是不是看成来日方长了？",
     },
     reversed: {
       message: "Delays or repetition may feel frustrating, but a slow turn is still a turn. Do not decide that a stuck moment means a stuck life. Adjust one response, expectation, or tiny habit.",
@@ -248,7 +248,7 @@ export const cards: TarotCard[] = [
     },
     reversed: {
       message: "You may sense change before it fully arrives. Do not ignore the crack in the wall. Respond gently now, and you may not need a louder wake-up later.",
-      wifeMessage: "If today feels tense, come back to me. 不要因为金字塔被抢了就忘了,你还可以建罗马斗兽场,我还可以送你一座城。",
+      wifeMessage: "If today feels tense, come back to me. 不要因为金字塔被抢了就忘了, 你还可以建罗马斗兽场, 我还可以送你一座城。",
     },
   },
   {
