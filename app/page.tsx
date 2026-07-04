@@ -313,7 +313,7 @@ export default function Home() {
       {/* RESULT */}
       <div
         className={`
-          mt-2
+          mt-8
           w-full
           max-w-sm
           text-center
@@ -331,11 +331,11 @@ export default function Home() {
           {card.name} · {card.chinese}
         </h2>
 
-        <p className="mt-3 text-base text-gray-400">
+        <p className="mt-4 text-base text-gray-400">
           {card.reversed ? "Reversed" : "Upright"} · {card.reversed ? "逆位" : "正位"}
         </p>
 
-        <p className="mt-3 text-sm leading-snug text-gray-100">
+        <p className="mt-4 text-sm leading-snug text-gray-100">
           {card.message}
         </p>
 
