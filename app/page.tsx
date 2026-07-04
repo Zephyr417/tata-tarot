@@ -124,11 +124,13 @@ function MysticHomeDecor({ revealed }: { revealed: boolean }) {
           ${revealed ? "opacity-0 -translate-y-3" : "opacity-100"}
         `}
       >
-        <div className="h-24 w-px bg-gradient-to-b from-amber-100/0 via-amber-100/40 to-amber-100/0" />
-        <div className="grid h-10 w-10 place-items-center rounded-full border border-amber-100/30 bg-slate-950/20 text-lg shadow-[0_0_22px_rgba(251,191,36,0.16)]">
-          🌙
+        <div className="mystic-pendant flex flex-col items-center">
+          <div className="h-24 w-px bg-gradient-to-b from-amber-100/0 via-amber-100/40 to-amber-100/0" />
+          <div className="grid h-10 w-10 place-items-center rounded-full border border-amber-100/30 bg-slate-950/20 text-lg shadow-[0_0_22px_rgba(251,191,36,0.16)]">
+            🌙
+          </div>
+          <div className="mt-2 h-7 w-px bg-gradient-to-b from-amber-100/30 to-amber-100/0" />
         </div>
-        <div className="mt-2 h-7 w-px bg-gradient-to-b from-amber-100/30 to-amber-100/0" />
       </div>
 
       <div
@@ -138,9 +140,27 @@ function MysticHomeDecor({ revealed }: { revealed: boolean }) {
           ${revealed ? "opacity-0 -translate-y-3" : "opacity-100"}
         `}
       >
-        <div className="h-20 w-px bg-gradient-to-b from-indigo-100/0 via-indigo-100/40 to-indigo-100/0" />
-        <div className="grid h-9 w-9 place-items-center rounded-full border border-indigo-100/30 bg-slate-950/20 text-lg shadow-[0_0_22px_rgba(165,180,252,0.14)]">
-          ☀️
+        <div className="mystic-pendant flex flex-col items-center [animation-delay:-2.1s]">
+          <div className="h-20 w-px bg-gradient-to-b from-indigo-100/0 via-indigo-100/40 to-indigo-100/0" />
+          <div className="grid h-9 w-9 place-items-center rounded-full border border-indigo-100/30 bg-slate-950/20 text-lg shadow-[0_0_22px_rgba(165,180,252,0.14)]">
+            ☀️
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`
+          absolute left-1/2 top-0 flex -translate-x-1/2 flex-col items-center text-amber-50/70
+          transition-all duration-1000 ease-out
+          ${revealed ? "opacity-0 -translate-y-3" : "opacity-100"}
+        `}
+      >
+        <div className="mystic-pendant flex flex-col items-center [animation-delay:-3.4s]">
+          <div className="h-16 w-px bg-gradient-to-b from-amber-100/0 via-amber-100/35 to-amber-100/0" />
+          <div className="grid h-11 w-11 place-items-center rounded-full border border-amber-100/25 bg-slate-950/20 text-xl shadow-[0_0_24px_rgba(253,230,138,0.16)]">
+            ✨
+          </div>
+          <div className="mt-2 h-5 w-px bg-gradient-to-b from-amber-100/25 to-amber-100/0" />
         </div>
       </div>
 
@@ -269,9 +289,7 @@ export default function Home() {
           ${revealed ? "h-0 opacity-0 -translate-y-4 pointer-events-none" : "h-[238px] opacity-100"}
         `}
       >
-        <div className="pt-15 text-4xl">✨</div>
-
-        <h1 className="mt-4 text-5xl font-bold">
+        <h1 className="pt-24 text-5xl font-bold">
           Tata&apos;s Tarot
         </h1>
 
