@@ -68,7 +68,7 @@ export default function Home() {
               bg-transparent
               border-0
               p-0
-              ${revealed ? "-translate-x-[280px] -translate-y-14 scale-150" : ""}
+              ${revealed ? "-translate-x-[140px] -translate-y-16 scale-110" : ""}
             `}
             style={{
               transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -97,10 +97,10 @@ export default function Home() {
         {/* ================= RESULT OVERLAY ================= */}
         <div
           className={`
-            absolute right-10 top-1/2 -translate-y-[280px]
+            absolute right-10 top-1/2 -translate-y-[140px]
             text-white max-w-md
             transition-all duration-1000
-            ${revealed ? "opacity-100 -translate-x-[200px] pointer-events-auto" : "opacity-0 translate-x-10 pointer-events-none"}
+            ${revealed ? "opacity-100 -translate-x-[140px] pointer-events-auto" : "opacity-0 translate-x-10 pointer-events-none"}
           `}
         >
           <div className="text-6xl">🌙</div>
