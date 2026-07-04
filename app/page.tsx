@@ -1,7 +1,7 @@
 "use client";
 
 import type { PointerEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cards } from "@/data/cards";
 
 const cardStep = 38;
@@ -11,6 +11,32 @@ const selectedCardScale = 1.12;
 type DrawBehavior = {
   selectedIndex: number;
 };
+
+type WeatherSummary = {
+  temperature: number;
+  label: string;
+};
+
+function getWeatherLabel(code: number) {
+  if (code === 0) return "Clear";
+  if ([1, 2, 3].includes(code)) return "Cloudy";
+  if ([45, 48].includes(code)) return "Fog";
+  if ([51, 53, 55, 56, 57].includes(code)) return "Drizzle";
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "Rain";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snow";
+  if ([95, 96, 99].includes(code)) return "Storm";
+
+  return "Weather";
+}
+
+function formatDublinDate() {
+  return new Intl.DateTimeFormat("en-IE", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    timeZone: "Europe/Dublin",
+  }).format(new Date());
+}
 
 function getRandomUint32() {
   if (typeof crypto !== "undefined" && crypto.getRandomValues) {
@@ -91,6 +117,79 @@ function getCardTitleClass(title: string) {
   }
 
   return "text-[2.15rem]";
+}
+
+function HomeStatusBar({ hidden }: { hidden: boolean }) {
+  const [dateLabel] = useState(() => formatDublinDate());
+  const [weather, setWeather] = useState<WeatherSummary | null>(null);
+  const [weatherFailed, setWeatherFailed] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadWeather() {
+      try {
+        const response = await fetch(
+          "https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,weather_code&timezone=Europe%2FDublin",
+          { signal: controller.signal },
+        );
+
+        if (!response.ok) {
+          throw new Error("Weather request failed");
+        }
+
+        const data = (await response.json()) as {
+          current?: {
+            temperature_2m?: number;
+            weather_code?: number;
+          };
+        };
+        const temperature = data.current?.temperature_2m;
+        const weatherCode = data.current?.weather_code;
+
+        if (typeof temperature !== "number" || typeof weatherCode !== "number") {
+          throw new Error("Weather response missing current conditions");
+        }
+
+        setWeather({
+          temperature: Math.round(temperature),
+          label: getWeatherLabel(weatherCode),
+        });
+      } catch {
+        if (!controller.signal.aborted) {
+          setWeatherFailed(true);
+        }
+      }
+    }
+
+    loadWeather();
+
+    return () => controller.abort();
+  }, []);
+
+  return (
+    <div
+      className={`
+        absolute left-1/2 top-[max(12px,env(safe-area-inset-top))]
+        z-20 flex w-[calc(100%-48px)] max-w-sm -translate-x-1/2
+        items-center justify-between rounded-full border border-white/10
+        bg-white/[0.07] px-4 py-2 text-xs text-white/75
+        shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-md
+        transition-all duration-700 ease-out
+        ${hidden ? "opacity-0 -translate-y-3 pointer-events-none" : "opacity-100"}
+      `}
+    >
+      <span>{dateLabel || "Today"}</span>
+      <span className="text-white/45">Dublin</span>
+      <span>
+        {weather
+          ? `${weather.label} · ${weather.temperature}°C`
+          : weatherFailed
+            ? "Weather unavailable"
+            : "Loading weather"}
+      </span>
+    </div>
+  );
 }
 
 function MysticHomeDecor({ revealed }: { revealed: boolean }) {
@@ -280,6 +379,7 @@ export default function Home() {
   return (
     <main className="relative h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white">
       <MysticHomeDecor revealed={revealed} />
+      <HomeStatusBar hidden={drawing || flipped || revealed} />
       <div className="relative z-10 mx-auto flex h-full w-full max-w-[430px] flex-col items-center px-6 pb-[max(24px,env(safe-area-inset-bottom))] pt-[max(40px,env(safe-area-inset-top))]">
       {/* HEADER */}
       <div
