@@ -69,7 +69,7 @@ function useMysticAudio() {
     return audioContextRef.current;
   };
 
-  const playBell = (audioContext: AudioContext, frequency: number, volume = 0.035) => {
+  const playBell = (audioContext: AudioContext, frequency: number, volume = 0.016) => {
     const now = audioContext.currentTime;
     const oscillator = audioContext.createOscillator();
     const gain = audioContext.createGain();
@@ -78,16 +78,16 @@ function useMysticAudio() {
     oscillator.type = "sine";
     oscillator.frequency.setValueAtTime(frequency, now);
     filter.type = "highpass";
-    filter.frequency.setValueAtTime(420, now);
+    filter.frequency.setValueAtTime(1300, now);
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(volume, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.1);
 
     oscillator.connect(filter);
     filter.connect(gain);
     gain.connect(audioContext.destination);
     oscillator.start(now);
-    oscillator.stop(now + 1.5);
+    oscillator.stop(now + 2.2);
   };
 
   const startAmbient = async () => {
@@ -105,8 +105,8 @@ function useMysticAudio() {
       source.buffer = createNoiseBuffer(audioContext, 2);
       source.loop = true;
       filter.type = "lowpass";
-      filter.frequency.setValueAtTime(900, audioContext.currentTime);
-      gain.gain.setValueAtTime(0.012, audioContext.currentTime);
+      filter.frequency.setValueAtTime(520, audioContext.currentTime);
+      gain.gain.setValueAtTime(0.0045, audioContext.currentTime);
 
       source.connect(filter);
       filter.connect(gain);
@@ -119,11 +119,11 @@ function useMysticAudio() {
       chimeTimerRef.current = window.setInterval(() => {
         if (!audioContextRef.current) return;
 
-        const notes = [784, 932, 1175, 1397];
+        const notes = [1568, 1760, 2093, 2349, 2637];
         const note = notes[Math.floor(Math.random() * notes.length)];
 
-        playBell(audioContextRef.current, note, 0.018);
-      }, 4600);
+        playBell(audioContextRef.current, note, 0.01 + Math.random() * 0.007);
+      }, 6200);
     }
   };
 
@@ -141,7 +141,28 @@ function useMysticAudio() {
       return;
     }
 
-    playBell(audioContext, 1100 + Math.random() * 160, 0.018);
+    const startTime = audioContext.currentTime;
+    const source = audioContext.createBufferSource();
+    const highpass = audioContext.createBiquadFilter();
+    const lowpass = audioContext.createBiquadFilter();
+    const gain = audioContext.createGain();
+
+    source.buffer = createNoiseBuffer(audioContext, 0.18);
+    highpass.type = "highpass";
+    highpass.frequency.setValueAtTime(900, startTime);
+    lowpass.type = "lowpass";
+    lowpass.frequency.setValueAtTime(3600, startTime);
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.028, startTime + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
+
+    source.playbackRate.setValueAtTime(0.85 + Math.random() * 0.35, startTime);
+    source.connect(highpass);
+    highpass.connect(lowpass);
+    lowpass.connect(gain);
+    gain.connect(audioContext.destination);
+    source.start(startTime);
+    source.stop(startTime + 0.18);
   };
 
   const playFlip = async () => {
@@ -156,19 +177,20 @@ function useMysticAudio() {
     const filter = audioContext.createBiquadFilter();
     const gain = audioContext.createGain();
 
-    source.buffer = createNoiseBuffer(audioContext, 0.85);
+    source.buffer = createNoiseBuffer(audioContext, 1.55);
     filter.type = "bandpass";
-    filter.frequency.setValueAtTime(1250, now);
-    filter.Q.setValueAtTime(0.65, now);
+    filter.frequency.setValueAtTime(980, now);
+    filter.frequency.linearRampToValueAtTime(1420, now + 1.25);
+    filter.Q.setValueAtTime(0.45, now);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.075, now + 0.06);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.78);
+    gain.gain.exponentialRampToValueAtTime(0.042, now + 0.22);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.45);
 
     source.connect(filter);
     filter.connect(gain);
     gain.connect(audioContext.destination);
     source.start(now);
-    source.stop(now + 0.85);
+    source.stop(now + 1.55);
   };
 
   useEffect(() => {
