@@ -307,8 +307,8 @@ export default function Home() {
           ${revealed ? "opacity-100 -translate-y-4 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none"}
         `}
       >
-        <h2 className="mt-2 text-4xl font-bold">
-          {card.name}
+        <h2 className="-mt-6 text-4xl font-bold">
+          {card.name} · {card.chinese}
         </h2>
 
         <p className="mt-2 text-lg text-gray-400">
@@ -320,7 +320,7 @@ export default function Home() {
         </p>
 
         <p className="mt-6 text-pink-300 leading-relaxed">
-          ❤️ {card.wifeMessage}
+          ❤️水水: {card.wifeMessage}
         </p>
 
         <button
