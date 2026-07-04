@@ -77,6 +77,22 @@ function getDrawnCard(behavior: DrawBehavior, sessionDeck: ReturnType<typeof shu
   return sessionDeck[behavior.selectedIndex];
 }
 
+function getCardTitleClass(title: string) {
+  if (title.length >= 28) {
+    return "text-[1.35rem]";
+  }
+
+  if (title.length >= 24) {
+    return "text-[1.5rem]";
+  }
+
+  if (title.length >= 20) {
+    return "text-[1.7rem]";
+  }
+
+  return "text-[2.15rem]";
+}
+
 export default function Home() {
   const [flipped, setFlipped] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -307,15 +323,19 @@ export default function Home() {
           ${revealed ? "opacity-100 -translate-y-4 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none"}
         `}
       >
-        <h2 className="-mt-6 whitespace-nowrap text-[clamp(1.65rem,8vw,2.25rem)] font-bold">
+        <h2
+          className={`-mt-6 max-w-full whitespace-nowrap px-1 text-center font-bold leading-tight ${getCardTitleClass(
+            `${card.name} · ${card.chinese}`,
+          )}`}
+        >
           {card.name} · {card.chinese}
         </h2>
 
-        <p className="mt-1 text-base text-gray-400">
+        <p className="mt-3 text-base text-gray-400">
           {card.reversed ? "Reversed" : "Upright"} · {card.reversed ? "逆位" : "正位"}
         </p>
 
-        <p className="mt-1 text-sm leading-snug text-gray-100">
+        <p className="mt-3 text-sm leading-snug text-gray-100">
           {card.message}
         </p>
 
