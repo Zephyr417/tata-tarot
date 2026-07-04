@@ -307,26 +307,26 @@ export default function Home() {
           ${revealed ? "opacity-100 -translate-y-4 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none"}
         `}
       >
-        <h2 className="-mt-6 text-4xl font-bold">
+        <h2 className="-mt-6 whitespace-nowrap text-[clamp(1.65rem,8vw,2.25rem)] font-bold">
           {card.name} · {card.chinese}
         </h2>
 
-        <p className="mt-2 text-lg text-gray-400">
+        <p className="mt-1 text-base text-gray-400">
           {card.reversed ? "Reversed" : "Upright"} · {card.reversed ? "逆位" : "正位"}
         </p>
 
-        <p className="mt-2 text-base leading-relaxed text-gray-100">
+        <p className="mt-1 text-sm leading-snug text-gray-100">
           {card.message}
         </p>
 
-        <p className="mt-6 text-pink-300 leading-relaxed">
+        <p className="mt-4 text-sm leading-snug text-pink-300">
           ❤️水水: {card.wifeMessage}
         </p>
 
         <button
           onClick={reset}
           className="
-            mt-8
+            mt-5
             px-6
             py-3
             rounded-full
