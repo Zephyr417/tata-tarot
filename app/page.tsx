@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { getTodayCard } from "@/lib/getTodayCard";
 
 export default function Home() {
   const [flipped, setFlipped] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [card] = useState(() => getTodayCard());
 
   const handleDraw = () => {
     if (flipped) return;
@@ -32,7 +34,7 @@ export default function Home() {
           ${revealed ? "h-0 opacity-0 -translate-y-4 pointer-events-none" : "h-[238px] opacity-100"}
         `}
       >
-        <div className="pt-20 text-4xl">✨</div>
+        <div className="pt-15 text-4xl">✨</div>
 
         <h1 className="mt-4 text-5xl font-bold">
           Tata&apos;s Tarot
@@ -47,7 +49,7 @@ export default function Home() {
       <div
         className={`
           transition-all duration-1000 ease-out
-          ${revealed ? "mt-4 -translate-y-2 scale-[0.92]" : "mt-12"}
+          ${revealed ? "mt-2 -translate-y-2 scale-[0.92]" : "mt-12"}
         `}
       >
         <div
@@ -82,9 +84,9 @@ export default function Home() {
           {/* FRONT */}
           <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl pointer-events-none">
             <img
-              src="/cards/the moon.png"
-              alt="The Moon"
-              className="w-full h-full object-cover"
+              src={card.image}
+              alt={card.name}
+              className={`w-full h-full object-cover ${card.reversed ? "rotate-180" : ""}`}
             />
           </div>
         </div>
@@ -113,23 +115,20 @@ export default function Home() {
           ${revealed ? "opacity-100 -translate-y-4 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none"}
         `}
       >
-        <div className="text-5xl">🌙</div>
-
         <h2 className="mt-2 text-4xl font-bold">
-          The Moon
+          {card.name}
         </h2>
 
         <p className="mt-2 text-lg text-gray-400">
-          Reversed
+          {card.reversed ? "Reversed" : "Upright"} · {card.reversed ? "逆位" : "正位"}
         </p>
 
         <p className="mt-2 text-base leading-relaxed text-gray-100">
-          Don&apos;t let fear stop you from moving forward.
-          Trust your intuition and inner voice.
+          {card.message}
         </p>
 
         <p className="mt-6 text-pink-300 leading-relaxed">
-          ❤️ Message for you today
+          ❤️ {card.wifeMessage}
         </p>
 
         <button
