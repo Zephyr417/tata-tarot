@@ -1,7 +1,7 @@
 "use client";
 
 import type { PointerEvent } from "react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { cards } from "@/data/cards";
 
 const swipeThreshold = 42;
@@ -28,7 +28,6 @@ export default function Home() {
   const [dragStartX, setDragStartX] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [card, setCard] = useState(() => getChosenCard(10));
-  const suppressClickRef = useRef(false);
 
   const handleDraw = () => {
     if (flipped) return;
@@ -81,15 +80,16 @@ export default function Home() {
     setDragOffset(0);
 
     if (finalOffset <= -swipeThreshold) {
-      suppressClickRef.current = true;
       moveSelection(1);
       return;
     }
 
     if (finalOffset >= swipeThreshold) {
-      suppressClickRef.current = true;
       moveSelection(-1);
+      return;
     }
+
+    handleDraw();
   };
 
   return (
@@ -134,7 +134,8 @@ export default function Home() {
             className="
               relative
               h-80
-              w-[min(100vw-48px,360px)]
+              w-screen
+              max-w-[430px]
               touch-pan-y
               select-none
               overflow-visible
@@ -148,32 +149,16 @@ export default function Home() {
               const rotate = distance * -7;
 
               return (
-                <button
+                <div
                   key={choice.id}
-                  type="button"
                   aria-label={`Choose card ${index + 1}`}
-                  onClick={() => {
-                    if (suppressClickRef.current) {
-                      suppressClickRef.current = false;
-                      return;
-                    }
-
-                    if (index === selectedIndex) {
-                      handleDraw();
-                      return;
-                    }
-
-                    setSelectedIndex(index);
-                  }}
                   className={`
                     absolute
                     left-1/2
                     top-0
                     h-80
                     w-52
-                    -translate-x-1/2
                     rounded-2xl
-                    outline-none
                     ${dragStartX === null ? "transition-[transform,opacity,filter] duration-300 ease-out" : "transition-[opacity,filter] duration-150"}
                     ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}
                     ${index === selectedIndex ? "z-30" : "z-10 brightness-75"}
@@ -189,7 +174,7 @@ export default function Home() {
                       className="h-full w-full object-cover pointer-events-none"
                     />
                   </span>
-                </button>
+                </div>
               );
             })}
           </div>
