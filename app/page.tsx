@@ -49,7 +49,7 @@ export default function Home() {
         className={`
           mt-12
           transition-all duration-1000
-          ${revealed ? "-translate-y-10 scale-95" : ""}
+          ${revealed ? "-translate-y-32 scale-95" : ""}
         `}
       >
         <div
@@ -105,7 +105,7 @@ export default function Home() {
       {/* RESULT */}
       <div
         className={`
-          mt-8
+          -mt-10
           w-full
           max-w-sm
           text-center
