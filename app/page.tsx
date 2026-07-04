@@ -93,6 +93,67 @@ function getCardTitleClass(title: string) {
   return "text-[2.15rem]";
 }
 
+function MysticHomeDecor({ revealed }: { revealed: boolean }) {
+  const stars = [
+    { left: "10%", top: "18%", size: "text-[10px]", delay: "delay-0" },
+    { left: "18%", top: "34%", size: "text-xs", delay: "delay-150" },
+    { left: "82%", top: "20%", size: "text-[10px]", delay: "delay-300" },
+    { left: "88%", top: "42%", size: "text-xs", delay: "delay-0" },
+    { left: "14%", top: "70%", size: "text-[9px]", delay: "delay-300" },
+    { left: "78%", top: "74%", size: "text-[9px]", delay: "delay-150" },
+  ];
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`
+        pointer-events-none absolute inset-0 overflow-hidden
+        transition-all duration-1000 ease-out
+        ${revealed ? "opacity-0 -translate-y-3" : "opacity-100"}
+      `}
+    >
+      <div className="absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_50%_0%,rgba(244,214,151,0.16),transparent_58%)]" />
+
+      <div className="absolute left-[13%] top-0 flex flex-col items-center text-amber-100/60">
+        <div className="h-24 w-px bg-gradient-to-b from-amber-100/0 via-amber-100/40 to-amber-100/0" />
+        <div className="grid h-10 w-10 place-items-center rounded-full border border-amber-100/30 bg-slate-950/20 text-lg shadow-[0_0_22px_rgba(251,191,36,0.16)]">
+          🌙
+        </div>
+        <div className="mt-2 h-7 w-px bg-gradient-to-b from-amber-100/30 to-amber-100/0" />
+      </div>
+
+      <div className="absolute right-[12%] top-6 flex flex-col items-center text-indigo-100/60">
+        <div className="h-20 w-px bg-gradient-to-b from-indigo-100/0 via-indigo-100/40 to-indigo-100/0" />
+        <div className="grid h-9 w-9 place-items-center rounded-full border border-indigo-100/30 bg-slate-950/20 text-lg shadow-[0_0_22px_rgba(165,180,252,0.14)]">
+          ☀️
+        </div>
+      </div>
+
+      <div className="absolute left-1/2 top-[21%] h-16 w-44 -translate-x-1/2 opacity-45">
+        <div className="absolute left-4 top-8 h-px w-36 rotate-[-8deg] bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+        <div className="absolute left-10 top-4 h-px w-24 rotate-[22deg] bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+        <span className="absolute left-3 top-7 h-1.5 w-1.5 rounded-full bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.55)]" />
+        <span className="absolute left-16 top-2 h-1 w-1 rounded-full bg-white/60" />
+        <span className="absolute right-9 top-10 h-1.5 w-1.5 rounded-full bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
+        <span className="absolute right-3 top-5 h-1 w-1 rounded-full bg-white/50" />
+      </div>
+
+      <div className="absolute bottom-16 left-5 text-5xl text-white/[0.04]">Otter</div>
+      <div className="absolute bottom-24 right-4 text-5xl text-white/[0.04]">Tarot</div>
+
+      {stars.map((star) => (
+        <span
+          key={`${star.left}-${star.top}`}
+          className={`absolute ${star.size} ${star.delay} animate-pulse text-amber-100/45`}
+          style={{ left: star.left, top: star.top }}
+        >
+          ✦
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const [flipped, setFlipped] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -174,8 +235,9 @@ export default function Home() {
   };
 
   return (
-    <main className="h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white">
-      <div className="mx-auto flex h-full w-full max-w-[430px] flex-col items-center px-6 pb-[max(24px,env(safe-area-inset-bottom))] pt-[max(40px,env(safe-area-inset-top))]">
+    <main className="relative h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white">
+      <MysticHomeDecor revealed={revealed} />
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-[430px] flex-col items-center px-6 pb-[max(24px,env(safe-area-inset-bottom))] pt-[max(40px,env(safe-area-inset-top))]">
       {/* HEADER */}
       <div
         className={`
@@ -191,7 +253,7 @@ export default function Home() {
         </h1>
 
         <p className="mt-4 text-lg leading-relaxed">
-          What&apos;s on the otter's mind now?
+          What&apos;s on the otter&apos;s mind now?
         </p>
       </div>
 
