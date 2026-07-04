@@ -7,9 +7,16 @@ import { cards } from "@/data/cards";
 const cardStep = 38;
 const tapThreshold = 8;
 const selectedCardScale = 1.12;
+const todayCardStorageKey = "tata-tarot-today-card";
 
 type DrawBehavior = {
   selectedIndex: number;
+};
+
+type TodayCardRecord = {
+  dateKey: string;
+  cardName: string;
+  reversed: boolean;
 };
 
 type WeatherSummary = {
@@ -42,6 +49,69 @@ function formatDublinDate() {
     parts.find((part) => part.type === type)?.value ?? "";
 
   return `${value("year")}.${value("month")}.${value("day")}, ${value("weekday")}`;
+}
+
+function getDublinDateKey() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Europe/Dublin",
+  }).formatToParts(new Date());
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+function readTodayCardRecord() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const stored = window.localStorage.getItem(todayCardStorageKey);
+
+    if (!stored) {
+      return null;
+    }
+
+    const record = JSON.parse(stored) as Partial<TodayCardRecord>;
+
+    if (
+      record.dateKey !== getDublinDateKey() ||
+      !record.cardName ||
+      typeof record.reversed !== "boolean"
+    ) {
+      return null;
+    }
+
+    return record as TodayCardRecord;
+  } catch {
+    return null;
+  }
+}
+
+function writeTodayCardRecord(cardName: string, reversed: boolean) {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const existingRecord = readTodayCardRecord();
+
+  if (existingRecord) {
+    return existingRecord;
+  }
+
+  const record: TodayCardRecord = {
+    dateKey: getDublinDateKey(),
+    cardName,
+    reversed,
+  };
+
+  window.localStorage.setItem(todayCardStorageKey, JSON.stringify(record));
+
+  return record;
 }
 
 function getRandomUint32() {
@@ -312,15 +382,26 @@ export default function Home() {
   const [card, setCard] = useState(() => getPreviewCard(10));
   const [sessionSeed] = useState(() => getRandomUint32());
   const [sessionDeck] = useState(() => shuffleCards(sessionSeed));
+  const [todayCardRecord, setTodayCardRecord] = useState<TodayCardRecord | null>(null);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setTodayCardRecord(readTodayCardRecord());
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const handleDraw = () => {
     if (flipped || drawing) return;
 
-    setCard(
-      getDrawnCard({
-        selectedIndex,
-      }, sessionDeck),
-    );
+    const drawnCard = getDrawnCard({
+      selectedIndex,
+    }, sessionDeck);
+    const todayRecord = writeTodayCardRecord(drawnCard.name, drawnCard.reversed);
+
+    setCard(drawnCard);
+    setTodayCardRecord(todayRecord);
     setDrawing(true);
 
     setTimeout(() => {
@@ -519,10 +600,21 @@ export default function Home() {
         Think of the question. Choose your magic card.
       </p>
 
+      <p
+        className={`
+          mt-4 max-w-xs text-center text-xs leading-relaxed text-amber-100/65
+          transition-all duration-500
+          ${todayCardRecord && !drawing && !flipped && !revealed ? "opacity-100" : "opacity-0 pointer-events-none"}
+        `}
+      >
+        Today&apos;s card has already found you. It&apos;s “{todayCardRecord?.cardName}”{" "}
+        {todayCardRecord?.reversed ? "Reversed" : "Upright"} ✨
+      </p>
+
       {/* RESULT */}
       <div
         className={`
-          mt-8
+          -mt-8
           w-full
           max-w-sm
           text-center
